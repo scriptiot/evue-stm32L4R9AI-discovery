@@ -102,7 +102,7 @@ uint8_t BSP_PSRAM_Init(void)
     static FMC_NORSRAM_TimingTypeDef Timing;
 
     /* Power on PSRAM */
-    PSRAM_PowerOn();
+    //PSRAM_PowerOn();
 
     /* PSRAM device configuration */
     /* Timing configuration derived from system clock (up to 120Mhz)
