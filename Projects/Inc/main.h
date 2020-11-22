@@ -54,6 +54,11 @@
 #define BRIGHTNESS_MIN      50
 #define BRIGHTNESS_NORMAL   200
 
+void * new_malloc(uint32_t size);
+
+void new_free(void * mem);
+
+
 #endif /* __MAIN_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

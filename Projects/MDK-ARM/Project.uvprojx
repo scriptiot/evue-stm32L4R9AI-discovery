@@ -47,7 +47,7 @@
             <NotGenerated>0</NotGenerated>
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
-          <OutputDirectory>STM32L4R9I-Discovery\Exe\</OutputDirectory>
+          <OutputDirectory>..\..\build\</OutputDirectory>
           <OutputName>Project</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
@@ -310,7 +310,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>3</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -333,9 +333,9 @@
             <v6Rtti>0</v6Rtti>
             <VariousControls>
               <MiscControls>--gnu</MiscControls>
-              <Define>USE_HAL_DRIVER,STM32L4R9xx,LV_CONF_INCLUDE_SIMPLE,EVM_LANG_ENABLE_JAVASCRIPT,EVM_LANG_ENABLE_CSS,EVM_LANG_ENABLE_HML,CONFIG_EVM_ECMA_OBJECT,CONFIG_EVM_ECMA_ARRAY,CONFIG_EVM_ECMA_NUMBER,CONFIG_EVM_ECMA_STRING,CONFIG_EVM_ECMA_TIMEOUT</Define>
+              <Define>USE_HAL_DRIVER,STM32L4R9xx,LV_CONF_INCLUDE_SIMPLE,LV_LVGL_H_INCLUDE_SIMPLE,EVM_LANG_ENABLE_JAVASCRIPT,EVM_LANG_ENABLE_CSS,EVM_LANG_ENABLE_HML,CONFIG_EVM_ECMA_OBJECT,CONFIG_EVM_ECMA_ARRAY,CONFIG_EVM_ECMA_NUMBER,CONFIG_EVM_ECMA_STRING,CONFIG_EVM_ECMA_TIMEOUT</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;..\..\Drivers\CMSIS\Include;../../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../../Drivers/STM32L4xx_HAL_Driver/Inc;../../Drivers/BSP/STM32L4R9I-Discovery;../../Drivers/BSP/Components/Common;..\..\Middlewares\Third_Party\FatFs\src;..\Src;..\..\modules\ecma\inc;..\..\modules\hml;..\..\modules\hml\frameworks;..\..\..\evm\libevm;..\..\lvgl;..\..\Drivers\BSP\Components\mfxstm32l152</IncludePath>
+              <IncludePath>../Inc;..\..\Drivers\CMSIS\Include;../../Drivers/CMSIS/Device/ST/STM32L4xx/Include;../../Drivers/STM32L4xx_HAL_Driver/Inc;../../Drivers/BSP/STM32L4R9I-Discovery;../../Drivers/BSP/Components/Common;..\..\Middlewares\Third_Party\FatFs\src;..\Src;..\..\modules\ecma\inc;..\..\modules\hml;..\..\modules\hml\frameworks;..\..\lvgl;..\..\Drivers\BSP\Components\mfxstm32l152;..\..\modules\hml\lvgl\hml_element;..\..\modules\hml\lvgl\lv_lib_png;..\..\libevm\include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -1169,45 +1169,110 @@
               <FileType>1</FileType>
               <FilePath>..\..\modules\hml\frameworks\js_router.c</FilePath>
             </File>
+            <File>
+              <FileName>hml_style.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_style.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_base.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_base.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_chart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_chart.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_div.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_div.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_image.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_image.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_image_animator.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_image_animator.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_input.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_input.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_list.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_list.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_listitem.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_listitem.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_marquee.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_marquee.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_picker_view.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_picker_view.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_progress.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_progress.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_slider.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_slider.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_stack.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_stack.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_swiper.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_swiper.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_switch.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_switch.c</FilePath>
+            </File>
+            <File>
+              <FileName>hml_text.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\hml_element\hml_text.c</FilePath>
+            </File>
+            <File>
+              <FileName>lodepng.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\lv_lib_png\lodepng.c</FilePath>
+            </File>
+            <File>
+              <FileName>lv_png.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\modules\hml\lvgl\lv_lib_png\lv_png.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
-          <GroupName>evm</GroupName>
+          <GroupName>libevm</GroupName>
           <Files>
             <File>
-              <FileName>compiler.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\evm\libevm\compiler.c</FilePath>
-            </File>
-            <File>
-              <FileName>cssparser.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\evm\libevm\cssparser.c</FilePath>
-            </File>
-            <File>
-              <FileName>evm.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\evm\libevm\evm.c</FilePath>
-            </File>
-            <File>
-              <FileName>gc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\evm\libevm\gc.c</FilePath>
-            </File>
-            <File>
-              <FileName>hmlparser.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\evm\libevm\hmlparser.c</FilePath>
-            </File>
-            <File>
-              <FileName>jsparser.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\evm\libevm\jsparser.c</FilePath>
-            </File>
-            <File>
-              <FileName>native.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\..\..\evm\libevm\native.c</FilePath>
+              <FileName>libevue.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\..\libevm\lib\evue\keil\libevue.lib</FilePath>
             </File>
           </Files>
         </Group>

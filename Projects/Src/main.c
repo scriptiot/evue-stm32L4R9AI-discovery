@@ -99,6 +99,15 @@ static void Error_Handler(void)
   while(1) { ; } /* Blocking on error */
 }
 
+void * new_malloc(uint32_t size){
+	return mymalloc(SRAMEX, size);
+}
+
+void new_free(void * mem){
+	myfree(SRAMEX, mem);
+}
+
+
 /**
   * @brief  Main program
   * @param  None
@@ -190,8 +199,11 @@ int main(void)
   */
 void CopyInVirtualBuffer(uint32_t *pSrc, uint32_t *pDst, uint16_t x, uint16_t y, uint16_t xsize, uint16_t ysize)
 {
-uint32_t destination = (uint32_t)pDst + (y * 1536 + x) * 2;
+  static int dma2d_config = 0;
+  uint32_t destination = (uint32_t)pDst + (y * 1536 + x) * 2;
   uint32_t source      = (uint32_t)pSrc;
+	
+	
 
   Dma2dHandle.Instance          = DMA2D;
 
@@ -211,13 +223,23 @@ uint32_t destination = (uint32_t)pDst + (y * 1536 + x) * 2;
   Dma2dHandle.LayerCfg[1].InputAlpha     = 0;                /* Not used */
   Dma2dHandle.LayerCfg[1].RedBlueSwap    = DMA2D_RB_REGULAR; //DMA2D_RB_REGULAR;    /* No ForeGround Red/Blue swap */
   Dma2dHandle.LayerCfg[1].AlphaInverted  = DMA2D_REGULAR_ALPHA; /* No ForeGround Alpha inversion */
-
+  
+  
   /* DMA2D Initialization */
   if(HAL_DMA2D_Init(&Dma2dHandle) == HAL_OK)
   {
-    if(HAL_DMA2D_ConfigLayer(&Dma2dHandle, 1) == HAL_OK)
+    if( dma2d_config ){
+		if (HAL_DMA2D_Start(&Dma2dHandle, source, destination, xsize, ysize) == HAL_OK)
+		  {
+			/* Polling For DMA transfer */
+			HAL_DMA2D_PollForTransfer(&Dma2dHandle, 10);
+		  }
+		  return;
+	}
+	if(HAL_DMA2D_ConfigLayer(&Dma2dHandle, 1) == HAL_OK)
     {
-      if (HAL_DMA2D_Start(&Dma2dHandle, source, destination, xsize, ysize) == HAL_OK)
+      dma2d_config = 1;
+	  if (HAL_DMA2D_Start(&Dma2dHandle, source, destination, xsize, ysize) == HAL_OK)
       {
         /* Polling For DMA transfer */
         HAL_DMA2D_PollForTransfer(&Dma2dHandle, 10);

@@ -2,6 +2,7 @@
 #include "main.h"
 #include "stm32l4r9i_discovery_ts.h"
 #include "mfxstm32l152.h"
+#include "lv_png.h"
 
 static TS_StateTypeDef  TS_State;
 
@@ -10,9 +11,10 @@ extern DSI_HandleTypeDef    DsiHandle;
 extern void ecma_timer_poll(evm_t * e);
 
 static lv_disp_buf_t disp_buf;
-static lv_color_t buf_1[LV_HOR_RES_MAX * 195];
+static lv_color_t * buf_1;
+static lv_color_t * buf_2;
 
-static refresh_flag = 0;
+lv_disp_t *g_disp;
 
 void my_disp_flush(lv_disp_t * disp, const lv_area_t * area, lv_color_t * color_p)
 {
@@ -20,12 +22,13 @@ void my_disp_flush(lv_disp_t * disp, const lv_area_t * area, lv_color_t * color_
 	int w = area->x2 - area->x1 + 1;
 	CopyInVirtualBuffer((uint32_t *)color_p, (uint32_t *)LAYER_ADDRESS, area->x1, area->y1, w, h);
 	HAL_DSI_Refresh(&DsiHandle);
-    lv_disp_flush_ready(disp);         /* Indicate you are ready with the flushing*/
+	g_disp = disp;
+            /* Indicate you are ready with the flushing*/
 }
 
 void HAL_DSI_EndOfRefreshCallback(DSI_HandleTypeDef *hdsi)
 {
-	
+	lv_disp_flush_ready(g_disp); 
 }
 
 
@@ -92,7 +95,7 @@ void Mfx_Event(void)
     JoystickStatus = statusGpio & (RIGHT_JOY_PIN | LEFT_JOY_PIN | UP_JOY_PIN | DOWN_JOY_PIN);
 
     /* Insert a little delay to avoid debounce */
-    HAL_Delay(500);
+    HAL_Delay(1);
 
     /* Clear IO Expander IT */
     BSP_IO_ITClear(statusGpio);
@@ -178,8 +181,6 @@ static lv_fs_res_t pcfs_open(lv_fs_drv_t * drv, void * file_p, const char * fn, 
 {
     (void) drv; /*Unused*/
 
-    const char * flags = "";
-
 	char buf[128];
 	sprintf(buf,  "0:/%s", fn);
 	FRESULT res = f_open(&lvgl_file, buf, FA_READ | FA_OPEN_EXISTING);
@@ -203,8 +204,6 @@ static lv_fs_res_t pcfs_open(lv_fs_drv_t * drv, void * file_p, const char * fn, 
 static lv_fs_res_t pcfs_close(lv_fs_drv_t * drv, void * file_p)
 {
     (void) drv; /*Unused*/
-
-    pc_file_t * fp = file_p;        /*Just avoid the confusing casings*/
     f_close(&lvgl_file);
     return LV_FS_RES_OK;
 }
@@ -222,8 +221,6 @@ static lv_fs_res_t pcfs_close(lv_fs_drv_t * drv, void * file_p)
 static lv_fs_res_t pcfs_read(lv_fs_drv_t * drv, void * file_p, void * buf, uint32_t btr, uint32_t * br)
 {
     (void) drv; /*Unused*/
-
-    pc_file_t * fp = file_p;        /*Just avoid the confusing casings*/
     f_read(&lvgl_file, buf, btr, br);
     return LV_FS_RES_OK;
 }
@@ -238,9 +235,7 @@ static lv_fs_res_t pcfs_read(lv_fs_drv_t * drv, void * file_p, void * buf, uint3
  */
 static lv_fs_res_t pcfs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos)
 {
-    (void) drv; /*Unused*/
-
-    pc_file_t * fp = file_p;        /*Just avoid the confusing casings*/	
+    (void) drv; /*Unused*/	
 	f_lseek(&lvgl_file, pos);
     return LV_FS_RES_OK;
 }
@@ -256,9 +251,14 @@ static lv_fs_res_t pcfs_seek(lv_fs_drv_t * drv, void * file_p, uint32_t pos)
 static lv_fs_res_t pcfs_tell(lv_fs_drv_t * drv, void * file_p, uint32_t * pos_p)
 {
     (void) drv; /*Unused*/
-    pc_file_t * fp = file_p;        /*Just avoid the confusing casings*/
     *pos_p = (uint32_t)f_tell(&lvgl_file);
     return LV_FS_RES_OK;
+}
+
+static lv_fs_res_t pcfs_size_cb(lv_fs_drv_t *drv, void *file_p, uint32_t *size_p){
+	pc_file_t * fp = file_p;
+	*size_p = f_size(fp);
+	return LV_FS_RES_OK;
 }
 
 void lvgl_image_driver_init(){
@@ -272,16 +272,22 @@ void lvgl_image_driver_init(){
     pcfs_drv.read_cb = pcfs_read;
     pcfs_drv.seek_cb = pcfs_seek;
     pcfs_drv.tell_cb = pcfs_tell;
+	pcfs_drv.size_cb = pcfs_size_cb;
     lv_fs_drv_register(&pcfs_drv);
 }
+
+extern void lv_demo_widgets(void);
 
 void lvgl_main()
 {
 	lv_init();
+	lv_png_init();
 	
+	buf_1 = evm_malloc(LV_HOR_RES_MAX * LV_VER_RES_MAX);
+	buf_2 = evm_malloc(LV_HOR_RES_MAX * LV_VER_RES_MAX);
     lv_disp_drv_t disp_drv;
     lv_indev_drv_t indev_drv;
-    lv_disp_buf_init(&disp_buf, buf_1, NULL, LV_HOR_RES_MAX * 195);
+    lv_disp_buf_init(&disp_buf, buf_1, buf_2, LV_HOR_RES_MAX * LV_VER_RES_MAX / 2);
     lv_disp_drv_init(&disp_drv);          /*Basic initialization*/
     disp_drv.flush_cb = my_disp_flush;    /*Set your driver function*/
     disp_drv.buffer = &disp_buf;          /*Assign the buffer to the display*/

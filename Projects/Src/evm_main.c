@@ -11,8 +11,6 @@ FATFS fs;
 char * vm_load_file(evm_t * e, char *filename){
     FIL file;
 	int size;
-    size_t result;
-    uint32_t lSize;
     char *buffer = NULL;
 
     FRESULT res = f_open(&file, filename, FA_READ | FA_OPEN_EXISTING);
@@ -73,13 +71,12 @@ int evm_main(char * appdir)
 	
 	FRESULT res_sd = f_mount(&fs,"0:",1);
 
-    lvgl_main();
-
     evm_register_free((intptr_t)vm_free);
     evm_register_malloc((intptr_t)vm_malloc);
     evm_register_print((intptr_t)printf);
     evm_register_file_load((intptr_t)vm_load);
-
+	
+	lvgl_main();
     evm_t * env = js_app_on_create(router_app_dir);
 
     while(1){

@@ -7,3 +7,6 @@
 [submodule "modules/hml"]
 	path = modules/hml
 	url = ssh://git@47.105.117.50:2224/djf/hml_lvgl.git
+[submodule "libevm"]
+	path = libevm
+	url = https://gitee.com/scriptiot/libevm
